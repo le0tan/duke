@@ -7,20 +7,17 @@ import duke.task.ToDo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +57,7 @@ public class MainWindowController {
 
     private Duke duke;
 
-    protected void setDuke(Duke duke) {
+    void setDuke(Duke duke) {
         this.duke = duke;
         displayTaskList.addAll(duke.getTasks());
         middleListView.setItems(displayTaskList);
@@ -90,11 +87,11 @@ public class MainWindowController {
     }
 
 
-    protected Duke getDuke() {
+    Duke getDuke() {
         return duke;
     }
 
-    protected void refreshView() {
+    void refreshView() {
         switch (masterListView.getSelectionModel().getSelectedItem()) {
         case "To-Do":
             displayTaskList.setAll(duke.getTodos());
@@ -113,13 +110,13 @@ public class MainWindowController {
         }
     }
 
-    private class CustomListCell extends ListCell<Task> {
+    private static class CustomListCell extends ListCell<Task> {
         private HBox content;
         private Text title;
         private Text subtitle;
         private Label hboxLead;
 
-        public CustomListCell() {
+        CustomListCell() {
             super();
             title = new Text();
             subtitle = new Text();
@@ -181,83 +178,77 @@ public class MainWindowController {
                 "fx:id=\"detailTimeText\" was not injected: check your FXML file 'MainWindow.fxml'.";
 
         setDetailVisible(false);
-        middleListView.setCellFactory(new Callback<ListView<Task>, ListCell<Task>>() {
-            @Override
-            public ListCell<Task> call(ListView<Task> param) {
+        middleListView.setCellFactory(param -> {
 
-                ListCell<Task> cell = new CustomListCell();
-                // MenuItem for delete task
-                MenuItem deleteItem = new MenuItem();
-                deleteItem.setText("Delete");
-                deleteItem.setOnAction(event -> {
-                    duke.getTasks().remove(cell.getItem());
-                    try {
-                        duke.updateStorage();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    refreshView();
-                });
-                // MenuItem for finish task
-                MenuItem doneItem = new MenuItem();
-                doneItem.setText("Done");
-                doneItem.setOnAction(event -> {
-                    // TODO: Add undone feature
-                    int index = duke.getTasks().indexOf(cell.getItem());
-                    duke.getTasks().get(index).markAsDone();
-                    try {
-                        duke.updateStorage();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    refreshView();
-                });
-                // TODO: MenuItem for edit task
-                ContextMenu contextMenu = new ContextMenu();
-                contextMenu.getItems().add(deleteItem);
-                contextMenu.getItems().add(doneItem);
-                cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
-                    if (isNowEmpty) {
-                        cell.setContextMenu(null);
+            ListCell<Task> cell = new CustomListCell();
+            // MenuItem for delete task
+            MenuItem deleteItem = new MenuItem();
+            deleteItem.setText("Delete");
+            deleteItem.setOnAction(event -> {
+                duke.getTasks().remove(cell.getItem());
+                try {
+                    duke.updateStorage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                refreshView();
+            });
+            // MenuItem for finish task
+            MenuItem doneItem = new MenuItem();
+            doneItem.setText("Done");
+            doneItem.setOnAction(event -> {
+                // TODO: Add undone feature
+                int index = duke.getTasks().indexOf(cell.getItem());
+                duke.getTasks().get(index).markAsDone();
+                try {
+                    duke.updateStorage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                refreshView();
+            });
+            // TODO: MenuItem for edit task
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.getItems().add(deleteItem);
+            contextMenu.getItems().add(doneItem);
+            cell.emptyProperty().addListener((obs, wasEmpty, isNowEmpty) -> {
+                if (isNowEmpty) {
+                    cell.setContextMenu(null);
+                } else {
+                    cell.setContextMenu(contextMenu);
+                }
+            });
+
+            cell.setOnMouseClicked(event -> {
+                if (!cell.isEmpty()) {
+                    setDetailVisible(true);
+                    Task item = cell.getItem();
+                    detailDescriptionTextArea.setText(item.getDescription());
+                    String type;
+                    if (item instanceof ToDo) {
+                        type = "To-Do";
+                        hideDetailTime();
+                    } else if (item instanceof Deadline) {
+                        type = "Deadline";
+                        setDetailTime("by", ((Deadline) item).getBy().toString());
+                    } else if (item instanceof Event) {
+                        type = "Event";
+                        setDetailTime("at", ((Event) item).getAt().toString());
                     } else {
-                        cell.setContextMenu(contextMenu);
+                        type = "Unknown";
                     }
-                });
+                    detailTypeText.setText(type);
+                }
+            });
 
-                cell.setOnMouseClicked(event -> {
-                    if (!cell.isEmpty()) {
-                        setDetailVisible(true);
-                        Task item = cell.getItem();
-                        detailDescriptionTextArea.setText(item.getDescription());
-                        String type;
-                        if (item instanceof ToDo) {
-                            type = "To-Do";
-                            hideDetailTime();
-                        } else if (item instanceof Deadline) {
-                            type = "Deadline";
-                            setDetailTime("by", ((Deadline) item).getBy().toString());
-                        } else if (item instanceof Event) {
-                            type = "Event";
-                            setDetailTime("at", ((Event) item).getAt().toString());
-                        } else {
-                            type = "Unknown";
-                        }
-                        detailTypeText.setText(type);
-                    }
-                });
-
-                return cell;
-            }
+            return cell;
         });
         ObservableList<String> items = FXCollections.observableArrayList(
                 "To-Do", "Deadline", "Event", "All");
         masterListView.setItems(items);
-        masterListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                setDetailVisible(false);
-                refreshView();
-            }
+        masterListView.setOnMouseClicked(event -> {
+            setDetailVisible(false);
+            refreshView();
         });
         masterListView.getSelectionModel().select(3);
     }

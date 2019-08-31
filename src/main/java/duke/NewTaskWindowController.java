@@ -6,7 +6,6 @@ import duke.task.ToDo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -28,7 +27,7 @@ public class NewTaskWindowController {
 
     private MainWindowController parentController;
 
-    public void setParentController(MainWindowController parentController) {
+    void setParentController(MainWindowController parentController) {
         this.parentController = parentController;
     }
 
@@ -85,28 +84,25 @@ public class NewTaskWindowController {
         datePicker.setVisible(false);
         ObservableList<String> items = FXCollections.observableArrayList("To-Do", "Deadline", "Event");
         typeSelector.setItems(items);
-        typeSelector.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String selected = typeSelector.getSelectionModel().getSelectedItem();
-                switch (selected) {
-                case "To-Do":
-                    dateLabel.setVisible(false);
-                    datePicker.setVisible(false);
-                    break;
-                case "Deadline":
-                    dateLabel.setText("by");
-                    dateLabel.setVisible(true);
-                    datePicker.setVisible(true);
-                    break;
-                case "Event":
-                    dateLabel.setText("at");
-                    dateLabel.setVisible(true);
-                    datePicker.setVisible(true);
-                    break;
-                default:
-                    break;
-                }
+        typeSelector.setOnAction(event -> {
+            String selected = typeSelector.getSelectionModel().getSelectedItem();
+            switch (selected) {
+            case "To-Do":
+                dateLabel.setVisible(false);
+                datePicker.setVisible(false);
+                break;
+            case "Deadline":
+                dateLabel.setText("by");
+                dateLabel.setVisible(true);
+                datePicker.setVisible(true);
+                break;
+            case "Event":
+                dateLabel.setText("at");
+                dateLabel.setVisible(true);
+                datePicker.setVisible(true);
+                break;
+            default:
+                break;
             }
         });
     }

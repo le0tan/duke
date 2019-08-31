@@ -10,16 +10,16 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Storage {
+class Storage {
 
     private String filePath;
 
     /**
      * Constructs a Storage object with a custom file path.
      *
-     * @param filePath
+     * @param filePath file path of the save file
      */
-    public Storage(String filePath) {
+    Storage(String filePath) {
         this.filePath = filePath;
     }
 
@@ -27,7 +27,7 @@ public class Storage {
      * Constructs a Storage object with a default file path.
      *
      */
-    public Storage() {
+    Storage() {
         this.filePath = getSaveFilePath();
     }
 
@@ -97,7 +97,7 @@ public class Storage {
      * @throws IOException
      * @throws JSONException
      */
-    public void appendToSaveFile(Task task) throws IOException, JSONException {
+    void appendToSaveFile(Task task) throws IOException, JSONException {
         JSONObject obj = readSaveFile();
         obj.append("data", task.toMap());
         writeToSaveFile(obj.toString());
@@ -109,7 +109,7 @@ public class Storage {
      * @throws IOException
      * @throws JSONException
      */
-    public void syncSaveFile(TaskList tasks) throws IOException, JSONException {
+    void syncSaveFile(TaskList tasks) throws IOException, JSONException {
         JSONObject obj = new JSONObject();
         obj.put("data", new ArrayList<>());
         for (Task t : tasks.getList()) {
@@ -125,7 +125,7 @@ public class Storage {
      * @throws JSONException
      * @throws DukeException
      */
-    public List<Task> loadFromSaveFile() throws IOException, JSONException, DukeException {
+    List<Task> loadFromSaveFile() throws IOException, JSONException, DukeException {
         List<Task> tasks = new ArrayList<>();
         JSONObject obj = readSaveFile();
         JSONArray dataArray = obj.getJSONArray("data");

@@ -5,7 +5,6 @@ import duke.task.Event;
 import duke.task.Task;
 import duke.task.ToDo;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -23,15 +22,15 @@ import java.util.List;
 public class Duke extends Application {
     public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
 
-    protected Storage storage;
-    protected TaskList tasks;
+    Storage storage;
+    TaskList tasks;
 
     /**
      * Constructs a Duke object with save file located at filePath.
      *
-     * @param filePath
+     * @param filePath file path of the save file
      */
-    public Duke(String filePath) {
+    Duke(String filePath) {
         this.storage = new Storage(filePath);
         try {
             tasks = new TaskList(storage.loadFromSaveFile());
@@ -60,12 +59,9 @@ public class Duke extends Application {
         // Create the FXMLLoader
         FXMLLoader loader = new FXMLLoader(Launcher.class.getResource("/view/MainWindow.fxml"));
 
-        primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWING, new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent window) {
-                MainWindowController controller = loader.getController();
-                controller.setDuke(Duke.this);
-            }
+        primaryStage.addEventHandler(WindowEvent.WINDOW_SHOWING, window -> {
+            MainWindowController controller = loader.getController();
+            controller.setDuke(Duke.this);
         });
 
         // Create the Pane and all Details
@@ -80,7 +76,7 @@ public class Duke extends Application {
      * Gets tasks of type ToDo.
      * @return a list of ToDo objects
      */
-    public List<ToDo> getTodos() {
+    List<ToDo> getTodos() {
         List<ToDo> todos = new ArrayList<>();
         for (Task t : tasks.getList()) {
             if (t instanceof ToDo) {
@@ -94,7 +90,7 @@ public class Duke extends Application {
      * Gets tasks of type Deadline.
      * @return a list of Deadline objects
      */
-    public List<Deadline> getDeadlines() {
+    List<Deadline> getDeadlines() {
         List<Deadline> deadlines = new ArrayList<>();
         for (Task t : tasks.getList()) {
             if (t instanceof Deadline) {
@@ -108,7 +104,7 @@ public class Duke extends Application {
      * Gets tasks of type Event.
      * @return a list of Event objects
      */
-    public List<Event> getEvent() {
+    List<Event> getEvent() {
         List<Event> events = new ArrayList<>();
         for (Task t : tasks.getList()) {
             if (t instanceof Event) {
@@ -122,11 +118,11 @@ public class Duke extends Application {
      * Gets all tasks in storage.
      * @return a list of Task
      */
-    public List<Task> getTasks() {
+    List<Task> getTasks() {
         return tasks.getList();
     }
 
-    protected void updateStorage() throws IOException {
+    void updateStorage() throws IOException {
         storage.syncSaveFile(tasks);
     }
 }

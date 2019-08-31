@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskList {
-    List<Task> tasks;
+    private List<Task> tasks;
 
-    public TaskList(List<Task> tasks) {
+    TaskList(List<Task> tasks) {
         this.tasks = tasks;
     }
 
-    public TaskList() {
+    TaskList() {
         this.tasks = new ArrayList<>();
     }
 
@@ -30,7 +30,7 @@ public class TaskList {
         tasks.remove(index);
     }
 
-    public List<Task> getList() {
+    List<Task> getList() {
         return tasks;
     }
 
@@ -42,7 +42,7 @@ public class TaskList {
      * @throws IOException
      * @throws JSONException
      */
-    public void addTask(Task task, Storage storage) throws IOException, JSONException {
+    void addTask(Task task, Storage storage) throws IOException, JSONException {
         tasks.add(task);
         storage.appendToSaveFile(task);
     }
