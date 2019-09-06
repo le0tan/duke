@@ -1,6 +1,7 @@
 package duke;
 
 import duke.command.Command;
+import duke.command.ExitCommand;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,6 +32,7 @@ public class Duke extends Application {
     private TextField userInput;
     private Button sendButton;
     private Scene scene;
+    private Stage primaryStage;
 
     private Image user = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
     private Image duke = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
@@ -72,6 +74,7 @@ public class Duke extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.primaryStage = stage;
         //Step 1. Setting up required components
 
         //The container for the content of the chat to scroll.
@@ -186,6 +189,9 @@ public class Duke extends Application {
     public String getResponse(String input) {
         try {
             Command command = Parser.parse(input);
+            if (command instanceof ExitCommand) {
+                primaryStage.close();
+            }
             return command.execute(tasks, ui, storage);
         } catch (DukeException | IOException e) {
             return e.getMessage();

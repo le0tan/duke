@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,11 +37,7 @@ public class Storage {
      * @return default file path specific to platform
      */
     private String getSaveFilePath() {
-        if (System.getProperty("os.name").equals("Windows 10")) {
-            return "/Users/uicfa/Downloads/data.json";
-        } else {
-            return "/Users/leo/Downloads/data.json";
-        }
+        return Path.of(System.getProperty("user.dir"), "data.json").toString();
     }
 
     /**
@@ -53,7 +50,6 @@ public class Storage {
             throw new IOException();
         }
         writeToSaveFile("{\"data\":[]}");
-        Ui.showCreateSaveFileMessage();
     }
 
     /**
