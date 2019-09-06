@@ -177,6 +177,12 @@ public class Duke extends Application {
         userInput.clear();
     }
 
+    /**
+     * Get response in String for a given input.
+     *
+     * @param input input String
+     * @return response String
+     */
     public String getResponse(String input) {
         try {
             Command command = Parser.parse(input);
@@ -185,34 +191,4 @@ public class Duke extends Application {
             return e.getMessage();
         }
     }
-
-//    /**
-//     * Method to start Duke app.
-//     * @throws IOException
-//     */
-//    public void run() throws IOException {
-//        ui.showWelcomeMessage();
-//        boolean isExit = false;
-//        while (!isExit) {
-//            try {
-//                String fullCommand = ui.readCommand();
-//                Command c = Parser.parse(fullCommand);
-//                c.execute(tasks, ui, storage);
-//                isExit = c.isExit();
-//            } catch (DukeException e) {
-//                ui.showError(e.getMessage());
-//            }
-//        }
-//    }
-
-
-//    /**
-//     * Main function where the app launches.
-//     * @param args
-//     * @throws JSONException
-//     * @throws IOException
-//     */
-//    public static void main(String[] args) throws JSONException, IOException {
-//        new Duke().run();
-//    }
 }
