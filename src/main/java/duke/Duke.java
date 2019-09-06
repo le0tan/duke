@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -143,6 +142,10 @@ public class Duke extends Application {
         userInput.setOnAction((event) -> {
             handleUserInput();
         });
+
+        dialogContainer.getChildren().addAll(
+                DialogBox.getDukeDialog(this.ui.showWelcomeMessage(), duke)
+        );
     }
 
     /**
@@ -165,16 +168,16 @@ public class Duke extends Application {
      * the dialog container. Clears the user input after processing.
      */
     private void handleUserInput() {
-        Label userText = new Label(userInput.getText());
-        Label dukeText = new Label(getResponse(userInput.getText()));
+        String userText = userInput.getText();
+        String dukeText = getResponse(userInput.getText());
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(userText, new ImageView(user)),
-                DialogBox.getDukeDialog(dukeText, new ImageView(duke))
+                DialogBox.getUserDialog(userText, user),
+                DialogBox.getDukeDialog(dukeText, duke)
         );
         userInput.clear();
     }
 
-    private String getResponse(String input) {
+    public String getResponse(String input) {
         try {
             Command command = Parser.parse(input);
             return command.execute(tasks, ui, storage);
