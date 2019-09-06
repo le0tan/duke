@@ -3,71 +3,57 @@ package duke;
 import duke.task.Task;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class Ui {
-    private Scanner sc;
-
-    public Ui() {
-        sc = new Scanner(System.in);
-    }
-
-    public void closeScanner() {
-        sc.close();
-    }
 
     /**
      * Print the string of content with break lines and indentation.
      *
      * @param content
      */
-    public static void formattedPrint(String content) {
-        System.out.println("    ____________________________________________________________\n"
-                + "     " + content + "\n"
-                + "    ____________________________________________________________\n    ");
+    public static String formattedPrint(String content) {
+        return content;
     }
 
     /**
      * Print the beautified error message.
      * @param errorMessage
      */
-    public void showError(String errorMessage) {
-        formattedPrint("☹ OOPS!!! " + errorMessage);
+    public String showError(String errorMessage) {
+        return formattedPrint("☹ OOPS!!! " + errorMessage);
     }
 
     /**
      * Print the beautified loading error message.
      */
-    public void showLoadingError() {
-        showError("loading error");
+    public String showLoadingError() {
+        return showError("loading error");
     }
 
     /**
      * Print the beautified welcome message.
      */
-    public void showWelcomeMessage() {
-        System.out.println("    ____________________________________________________________\n"
-                + "     Hello! I'm Duke.\n"
-                + "     What can I do for you?\n"
-                + "    ____________________________________________________________\n");
+    public String showWelcomeMessage() {
+        return ("Hello! I'm Duke.\n"
+                + "What can I do for you?\n");
     }
 
     /**
      * Show tasks.
      * @param tasks
      */
-    public void showTasks(TaskList tasks) {
-        listTasks(tasks.getList(), "Here are the tasks in your list:");
+    public String showTasks(TaskList tasks) {
+        return listTasks(tasks.getList(), "Here are the tasks in your list:");
     }
 
 
-    private void listTasks(List<Task> tasks, String promptMessage) {
+    private String listTasks(List<Task> tasks, String promptMessage) {
         StringBuilder builder = new StringBuilder(promptMessage);
         for (int i = 0; i < tasks.size(); i++) {
             builder.append("\n" + "     ");
             builder.append(i + 1).append(".").append(tasks.get(i).toString());
         }
-        formattedPrint(builder.toString());
+        return formattedPrint(builder.toString());
     }
 
     /**
@@ -75,8 +61,8 @@ public class Ui {
      *
      * @param tasks
      */
-    public void showFoundTasks(List<Task> tasks) {
-        listTasks(tasks, "Here are the matching tasks in your list:");
+    public String showFoundTasks(List<Task> tasks) {
+        return listTasks(tasks, "Here are the matching tasks in your list:");
     }
 
     /**
@@ -84,11 +70,11 @@ public class Ui {
      * @param task
      * @param tasks
      */
-    public void showAddTaskMessage(Task task, TaskList tasks) {
+    public String showAddTaskMessage(Task task, TaskList tasks) {
         String output = "Got it. I've added this task: " + "\n" + "       "
                 + task.toString() + "\n" + "     "
                 + "Now you have " + tasks.size() + (tasks.size() == 1 ? " task in the list." : " tasks in the list.");
-        formattedPrint(output);
+        return formattedPrint(output);
     }
 
     /**
@@ -96,12 +82,12 @@ public class Ui {
      * @param tasks
      * @param index
      */
-    public void showDeleteTaskMessage(TaskList tasks, int index) {
+    public String showDeleteTaskMessage(TaskList tasks, int index) {
         String tempOut = "Noted. I've removed this task: " + "\n" + "       "
                 + tasks.get(index).toString() + "\n" + "     "
                 + "Now you have " + (tasks.size() - 1)
                 + (tasks.size() - 1 == 1 ? " task in the list." : " tasks in the list.");
-        formattedPrint(tempOut);
+        return formattedPrint(tempOut);
     }
 
     /**
@@ -109,31 +95,23 @@ public class Ui {
      * @param tasks
      * @param index
      */
-    public void showDoneTaskMessage(TaskList tasks, int index) {
+    public String showDoneTaskMessage(TaskList tasks, int index) {
         String tempOut = "Nice! I've marked this task as done: " + "\n" + "       "
                 + tasks.get(index).toString();
-        formattedPrint(tempOut);
+        return formattedPrint(tempOut);
     }
 
     /**
      * Print the beautified farewell message.
      */
-    public void showExitMessage() {
-        formattedPrint("Bye. Hope to see you again soon!");
+    public String showExitMessage() {
+        return formattedPrint("Bye. Hope to see you again soon!");
     }
 
     /**
      * Prompt user of successfully creating a new save data file.
      */
-    public static void showCreateSaveFileMessage() {
-        formattedPrint("data.json not found. Created a new one for you~");
-    }
-
-    /**
-     * Read a line of user input as string.
-     * @return the read command
-     */
-    public String readCommand() {
-        return sc.nextLine();
+    public static String showCreateSaveFileMessage() {
+        return formattedPrint("data.json not found. Created a new one for you~");
     }
 }

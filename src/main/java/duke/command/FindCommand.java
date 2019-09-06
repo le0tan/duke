@@ -17,14 +17,14 @@ public class FindCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
         List<Task> foundTasks = new ArrayList<>();
         for (Task t : tasks.getList()) {
             if (t.getDescription().contains(this.searchWord)) {
                 foundTasks.add(t);
             }
         }
-        ui.showFoundTasks(foundTasks);
+        return ui.showFoundTasks(foundTasks);
     }
 
     @Override

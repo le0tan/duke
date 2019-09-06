@@ -14,10 +14,10 @@ public class DoneCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
         tasks.get(index).markAsDone();
         storage.syncSaveFile(tasks);
-        ui.showDoneTaskMessage(tasks, index);
+        return ui.showDoneTaskMessage(tasks, index);
     }
 
     @Override

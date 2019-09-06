@@ -43,9 +43,9 @@ public class TaskList {
      * @throws IOException
      * @throws JSONException
      */
-    public void addTask(Task task, Ui ui, Storage storage) throws IOException, JSONException {
+    public String addTask(Task task, Ui ui, Storage storage) throws IOException, JSONException {
         tasks.add(task);
         storage.appendToSaveFile(task);
-        ui.showAddTaskMessage(task, this);
+        return ui.showAddTaskMessage(task, this);
     }
 }

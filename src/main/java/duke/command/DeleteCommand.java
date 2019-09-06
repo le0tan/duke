@@ -14,10 +14,10 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws IOException {
         tasks.remove(index);
         storage.syncSaveFile(tasks);
-        ui.showDeleteTaskMessage(tasks, index);
+        return ui.showDeleteTaskMessage(tasks, index);
     }
 
     @Override
